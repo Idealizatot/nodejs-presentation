@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node.js: встроенные модули</title>
+    <script type="module" crossorigin src="/assets/index-CCYet530.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DR_Rf6Ny.css">
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section class="cover" data-background-color="#0b1020">
+          <p class="eyebrow">NODE.JS · ОСНОВЫ</p>
+          <h1>Встроенные<br /><span>модули</span></h1>
+          <p class="lede">path, fs, os, process и другие инструменты, которые уже есть в Node.js</p>
+          <p class="hint">↓ используйте стрелки</p>
+        </section>
+
+        <section data-background-color="#10233a">
+          <p class="eyebrow">ПЕРЕД НАЧАЛОМ</p>
+          <h2>Документация — главный справочник</h2>
+          <div class="two-col">
+            <div>
+              <p>У Node.js есть подробная официальная документация по каждому встроенному модулю: методы, параметры, примеры и особенности платформ.</p>
+              <p class="accent">Сверяйтесь с ней, прежде чем добавлять новую зависимость.</p>
+            </div>
+            <div class="doc-link">
+              <code>nodejs.org/api</code>
+              <span>Разделы API: Path · File system · Process · OS</span>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <p class="eyebrow">NODE.JS ≠ БРАУЗЕР</p>
+          <h2>JavaScript тот же —<br /><span class="accent">возможности другие</span></h2>
+          <div class="module-grid capability-grid">
+            <div><code>Файлы</code><span>читать, создавать и изменять данные на диске</span></div>
+            <div><code>Сеть</code><span>создавать серверы и выполнять запросы</span></div>
+            <div><code>Процессы</code><span>получать конфигурацию и запускать команды</span></div>
+            <div><code>Без DOM</code><span>нет <code>window</code> и <code>document</code> по умолчанию</span></div>
+          </div>
+          <p class="small-note">Node.js — это среда выполнения JavaScript для серверов, CLI и автоматизации.</p>
+        </section>
+
+        <section>
+          <section data-background-color="#15233b">
+            <p class="eyebrow">ВОЗМОЖНОСТИ · ФАЙЛЫ</p>
+            <h2>Работа с данными на диске</h2>
+            <pre><code class="language-js" data-trim>import { readFile } from 'node:fs/promises';
+
+const config = await readFile('config.json', 'utf8');
+console.log(JSON.parse(config));
+</code></pre>
+            <p class="small-note">В браузере файл выбирает пользователь; Node.js может обращаться к разрешённым файлам напрямую.</p>
+          </section>
+          <section data-background-color="#152b42">
+            <p class="eyebrow">ВОЗМОЖНОСТИ · СЕТЬ</p>
+            <h2>Свой HTTP‑сервер</h2>
+            <pre><code class="language-js" data-trim>import { createServer } from 'node:http';
+
+createServer((request, response) => {
+  response.end('Привет из Node.js');
+}).listen(3000);
+</code></pre>
+            <p class="small-note">Node.js может принимать запросы — именно так начинается работа сервера.</p>
+          </section>
+          <section data-background-color="#1b213c">
+            <p class="eyebrow">ВОЗМОЖНОСТИ · ПРОЦЕССЫ</p>
+            <h2>Среда и конфигурация</h2>
+            <pre><code class="language-js" data-trim>console.log(process.cwd());
+console.log(process.env.NODE_ENV);
+console.log(process.argv);
+</code></pre>
+            <p class="small-note"><code>process</code> сообщает, откуда запущена программа, с какими настройками и аргументами.</p>
+          </section>
+        </section>
+
+        <section>
+          <p class="eyebrow">01 · КАРТА</p>
+          <h2>Зачем они нужны?</h2>
+          <div class="two-col">
+            <div>
+              <p>Node.js поставляется не только с runtime. В нём уже есть API для типичных задач сервера и CLI.</p>
+              <p class="accent">Не нужно искать библиотеку для каждой мелочи.</p>
+            </div>
+            <ul class="module-list">
+              <li><code>path</code><span>пути к файлам</span></li>
+              <li><code>fs</code><span>файловая система</span></li>
+              <li><code>os</code><span>сведения о системе</span></li>
+              <li><code>process</code><span>текущий процесс</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <section data-background-color="#111a30">
+          <p class="eyebrow">02 · IMPORT</p>
+          <h2>Подключение модулей</h2>
+          <pre><code class="language-js" data-trim data-line-numbers="1|3|5">// ESM — современный синтаксис
+import path from 'node:path';
+
+// CommonJS — часто встречается в старом коде
+const fs = require('node:fs');
+
+// node: подчёркивает: это встроенный модуль
+</code></pre>
+          <p class="small-note">Префикс <code>node:</code> помогает отличить core-модуль от одноимённого пакета.</p>
+        </section>
+
+        <section>
+          <section>
+            <p class="eyebrow">03 · PATH</p>
+            <h2>Пути без «магических» строк</h2>
+            <p><code>path</code> собирает и разбирает пути с учётом Windows, macOS и Linux.</p>
+            <pre><code class="language-js" data-trim>import path from 'node:path';
+
+const file = path.join('uploads', 'avatars', 'ada.png');
+
+path.extname(file); // '.png'
+path.basename(file); // 'ada.png'
+</code></pre>
+            <div class="platform-paths">
+              <div><span>macOS</span><code>uploads/avatars/ada.png</code></div>
+              <div><span>Linux</span><code>uploads/avatars/ada.png</code></div>
+              <div><span>Windows</span><code>uploads\avatars\ada.png</code></div>
+            </div>
+            <p class="small-note">Один и тот же вызов <code>path.join()</code> подставляет разделитель текущей платформы.</p>
+          </section>
+          <section data-background-color="#182643">
+            <p class="eyebrow">PATH · ВАЖНО</p>
+            <h2><code>join</code> ≠ <code>resolve</code></h2>
+            <div class="comparison">
+              <div><code>path.join('a', 'b')</code><strong>«a/b»</strong><span>склеивает сегменты</span></div>
+              <div><code>path.resolve('a', 'b')</code><strong>«/…/a/b»</strong><span>даёт абсолютный путь</span></div>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p class="eyebrow">04 · FS</p>
+            <h2>Чтение и запись файлов</h2>
+            <pre><code class="language-js" data-trim data-line-numbers="1|3-4|6-7">import { readFile, writeFile } from 'node:fs/promises';
+
+const text = await readFile('notes.txt', 'utf8');
+await writeFile('copy.txt', text.toUpperCase(), 'utf8');
+
+console.log('Готово');
+</code></pre>
+            <p class="accent">Для нового кода чаще выбирайте <code>node:fs/promises</code>.</p>
+          </section>
+          <section>
+            <p class="eyebrow">FS · АСИНХРОННОСТЬ</p>
+            <h2>Не блокируйте event loop</h2>
+            <div class="two-col compact">
+              <div class="bad"><p>Избегайте в серверном коде</p><code>readFileSync()</code><small>Останавливает JavaScript-поток на время чтения.</small></div>
+              <div class="good"><p>Предпочтительно</p><code>await readFile()</code><small>Позволяет обрабатывать другие задачи во время I/O.</small></div>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <p class="eyebrow">05 · OS И PROCESS</p>
+          <h2>Среда выполнения</h2>
+          <pre><code class="language-js" data-trim>import os from 'node:os';
+
+console.log(os.platform());  // 'darwin', 'linux', 'win32'
+console.log(os.cpus().length);
+console.log(process.cwd());  // текущая рабочая папка
+console.log(process.env.PORT ?? 3000);
+</code></pre>
+          <p class="small-note">Переменные окружения — удобное место для конфигурации, но не для секретов в исходном коде.</p>
+        </section>
+
+        <section>
+          <p class="eyebrow">06 · ЕЩЁ ПОЛЕЗНО</p>
+          <h2>Небольшой набор на каждый день</h2>
+          <div class="module-grid">
+            <div><code>url</code><span>URL и file URL</span></div>
+            <div><code>crypto</code><span>хэши, UUID, случайные байты</span></div>
+            <div><code>events</code><span>EventEmitter</span></div>
+            <div><code>http</code><span>низкоуровневый HTTP‑сервер</span></div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </body>
+</html>
